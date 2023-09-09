@@ -10,3 +10,6 @@ whileLoop(i < 10) {
   print(i)
   i += 1
 }
+
+extension [A, B](f: Function1[A, B])
+  def compose[C](g: Function1[B, C])(x: A) = g(f(x))
