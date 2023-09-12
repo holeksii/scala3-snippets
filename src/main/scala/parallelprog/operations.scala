@@ -18,7 +18,8 @@ def mapArrayPar[A, B](
     numOfTasks: Int,
     out: Array[B]
 ): Unit =
-  if numOfTasks == 1 then mapArrSeg(in, 0, in.length, f, out)
+  if numOfTasks < 1 then throw new IllegalArgumentException("numOfTasks < 1")
+  else if numOfTasks == 1 then mapArrSeg(in, 0, in.length, f, out)
   else
     val treshold = in.length / numOfTasks
 
