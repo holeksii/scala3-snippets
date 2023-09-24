@@ -34,7 +34,24 @@ def mapArrayPar[A, B](
 
     mapFromLeftToRight(0, in.length)
 
-def scanLeft[A](inp: Array[A], a0: A, f: (A, A) => A, out: Array[A]): Unit =
+def reduceSegPar[A](inp: Array[A], left: Int, right: Int, f: (A, A) => A): A =
+  if right - left < threshold then
+    var res = inp(left); var i = left + 1
+    while (i < right) { res = f(res, inp(i)); i = i + 1 }
+    res
+  else
+    val mid = left + (right - left) / 2
+    val (a1, a2) =
+      parallel(
+        reduceSegPar(inp, left, mid, f),
+        reduceSegPar(inp, mid, right, f)
+      )
+    f(a1, a2)
+
+def reducePar[A](inp: Array[A], f: (A, A) => A): A =
+  reduceSegPar(inp, 0, inp.length, f)
+
+def scanLeft[A](a0: A)(inp: Array[A], f: (A, A) => A, out: Array[A]): Unit =
   out(0) = a0
   var a = a0
   var i = 0
